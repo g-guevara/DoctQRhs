@@ -10,54 +10,7 @@ export default function DoctQRPage() {
   return (
     <div className="doctqr-container w-full">
       {/* Header Start */}
-      <header>
-        <div className="home">
-          <div className="container mx-auto max-w-7xl px-6">
-            <div className="flex justify-between items-center py-4">
-              <div className="flex items-center gap-2">
-                <Image 
-                  src="/img/3.png" 
-                  alt="Logo" 
-                  width={40} 
-                  height={40}
-                />
-                <h1 className="text-primary-blue text-xl font-bold">DoctQR</h1>
-              </div>
-              <nav className="hidden md:block">
-                <ul className="flex gap-6">
-                  <li>
-                    <Link href="/" className="text-primary-blue hover:text-black">
-                      Home
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/how_to" className="text-primary-blue hover:text-black">
-                      How it works
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/Sign_in" className="text-primary-blue hover:text-black">
-                      Sign in
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/Log_in" className="text-primary-blue hover:text-black">
-                      Log in
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
-              <div className="md:hidden">
-                <Button isIconOnly variant="light">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+
 
       {/* Intro Section - FIXED: Section takes full width but content stays contained */}
       <section className="w-full py-20" style={{ backgroundColor: "#c8e2fe" }}>
@@ -66,7 +19,7 @@ export default function DoctQRPage() {
             <div>
               <div className="mb-6">
                 <h2 className="text-4xl font-bold leading-tight text-gray-800">
-                  Allergies,<br/>
+                  Diseases,<br/>
                   Discapatitations,<br/>
                   Special conditions.
                 </h2>
