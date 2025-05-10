@@ -60,12 +60,12 @@ export default function DoctQRPage() {
       </header>
 
       {/* Intro Section */}
-      <section id="intro2" className="bg-light-blue py-20">
+      <section id="intro2" style={{ backgroundColor: "#c8e2fe" }} className="py-20">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <div className="mb-6">
-                <h2 className="text-4xl font-bold leading-tight">
+                <h2 className="text-4xl font-bold leading-tight text-gray-800">
                   Allergies,<br/>
                   Discapatitations,<br/>
                   Special conditions.
@@ -87,7 +87,6 @@ export default function DoctQRPage() {
                 alt="Hand holding a card with QR code" 
                 width={400} 
                 height={300}
-                className="rounded-lg shadow-md"
               />
             </div>
           </div>

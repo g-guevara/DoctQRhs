@@ -106,10 +106,12 @@ export const doctqrStyles = {
   
   // Estilos para las secciones específicas
   intro2: {
-    container: "bg-light-blue py-20",
+    container: "bg-light-blue py-20 relative overflow-hidden",
     title: "text-4xl font-bold leading-tight",
     text: "text-gray-700 mt-4",
     buttons: "flex gap-4 mt-6",
+    imageContainer: "flex justify-center items-center",
+    image: "mix-blend-multiply object-contain transition-transform duration-500 hover:scale-105",
   },
   
   service: {
