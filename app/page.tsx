@@ -8,12 +8,12 @@ import { styles } from "@/styles/doctqr-styles";
 
 export default function DoctQRPage() {
   return (
-    <div className="doctqr-container">
+    <div className="doctqr-container w-full">
       {/* Header Start */}
       <header>
         <div className="home">
-          <div className="container mx-auto">
-            <div className="flex justify-between items-center py-4 px-6">
+          <div className="container mx-auto max-w-7xl px-6">
+            <div className="flex justify-between items-center py-4">
               <div className="flex items-center gap-2">
                 <Image 
                   src="/img/3.png" 
@@ -59,9 +59,9 @@ export default function DoctQRPage() {
         </div>
       </header>
 
-      {/* Intro Section */}
-      <section id="intro2" style={{ backgroundColor: "#c8e2fe" }} className="py-20">
-        <div className="container mx-auto px-6">
+      {/* Intro Section - FIXED: Section takes full width but content stays contained */}
+      <section className="w-full py-20" style={{ backgroundColor: "#c8e2fe" }}>
+        <div className="container mx-auto max-w-7xl px-6">
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <div className="mb-6">
@@ -94,8 +94,8 @@ export default function DoctQRPage() {
       </section>
 
       {/* Services Section */}
-      <section id="service" className="py-20">
-        <div className="container mx-auto px-6">
+      <section id="service" className="w-full py-20">
+        <div className="container mx-auto max-w-7xl px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold">Uses of <u>DOCTQR</u></h2>
             <p className="text-gray-600 mt-2">
@@ -172,8 +172,8 @@ export default function DoctQRPage() {
       </section>
 
       {/* About Section */}
-      <section id="intro" className="py-20">
-        <div className="container mx-auto px-6">
+      <section id="intro" className="w-full py-20">
+        <div className="container mx-auto max-w-7xl px-6">
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <div className="mb-6">
@@ -191,7 +191,7 @@ export default function DoctQRPage() {
                 alt="Wallet with QR code" 
                 width={400} 
                 height={300}
-                className="rounded-lg shadow-md"
+
               />
             </div>
           </div>
@@ -199,8 +199,8 @@ export default function DoctQRPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-100 py-12">
-        <div className="container mx-auto px-6">
+      <footer className="w-full bg-gray-100 py-12">
+        <div className="container mx-auto max-w-7xl px-6">
           <div className="text-center">
             <ul className="flex flex-wrap justify-center gap-6 mb-4">
               <li>
