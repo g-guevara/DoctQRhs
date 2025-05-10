@@ -1,61 +1,240 @@
-'use client';
+"use client";
 
-import { Card, CardHeader } from "@nextui-org/react";
 import React from "react";
-import "@/styles/globals.css";
-import Agendar from "@/components/Agendar";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@nextui-org/button";
+import { styles } from "@/styles/doctqr-styles";
 
-export default function Home() {
+export default function DoctQRPage() {
   return (
-    <section className="flex flex-col items-center justify-center px-4 py-10 gap-1 lg:gap-10 mb-10">
-      {/* Encabezado */}
-      <div className="text-center max-w-3xl">
-        <h1 className="text-6xl md:text-9xl font-bold leading-tight">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
-            Bienvenido
-          </span>
-          <br />
-        </h1>
-        <p className="mt-4 text-gray-600 text-lg">
-          Invitación para crear páginas web a medida con Guillermo Guevara. Selecione una fecha para concretar una reunion por Meet.
-        </p>
-      </div>
-      <Agendar />
-      {/* Tarjeta de Atención */}
-      <div className="max-w-xl w-full px-6 mt-10 sm:mt-0 md:mt-0">
-  <Card
-    className="p-5 bg-white dark:bg-gray-800 dark:border-gray-700"
-    style={{ boxShadow: "1px 6px 20px rgba(83, 143, 240, 0.3)" }}
-  >
-    <CardHeader className="flex items-center mb-4">
-      <svg
-        className="w-6 h-6 text-gray-800 dark:text-blue-400"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="#2562ea"
-      >
-        <path d="M11.209 3.816a1 1 0 0 0-1.966.368l.325 1.74a5.338 5.338 0 0 0-2.8 5.762l.276 1.473.055.296c.258 1.374-.228 2.262-.63 2.998-.285.52-.527.964-.437 1.449.11.586.22 1.173.75 1.074l12.7-2.377c.528-.1.418-.685.308-1.27-.103-.564-.636-1.123-1.195-1.711-.606-.636-1.243-1.306-1.404-2.051-.233-1.085-.275-1.387-.303-1.587-.009-.063-.016-.117-.028-.182a5.338 5.338 0 0 0-5.353-4.39l-.298-1.592Z" />
-        <path
-          fillRule="evenodd"
-          d="M6.539 4.278a1 1 0 0 1 .07 1.412c-1.115 1.23-1.705 2.605-1.83 4.26a1 1 0 0 1-1.995-.15c.16-2.099.929-3.893 2.342-5.453a1 1 0 0 1 1.413-.069Z"
-          clipRule="evenodd"
-        />
-        <path d="M8.95 19.7c.7.8 1.7 1.3 2.8 1.3 1.6 0 2.9-1.1 3.3-2.5l-6.1 1.2Z" />
-      </svg>
-      <div className="ml-2 font-semibold text-blue-600 dark:text-blue-400">
-        Atención
-      </div>
-    </CardHeader>
-    <p className="text-gray-700 dark:text-gray-300 pl-2 pb-3">
-      Antes de pedir una hora, ten en cuenta que debes llevar una idea clara de
-      lo que quieres.Puedes ver la pestaña Recursos para inspirarte.
-    </p>
-  </Card>
-</div>
+    <div className="doctqr-container">
+      {/* Header Start */}
+      <header>
+        <div className="home">
+          <div className="container mx-auto">
+            <div className="flex justify-between items-center py-4 px-6">
+              <div className="flex items-center gap-2">
+                <Image 
+                  src="/img/3.png" 
+                  alt="Logo" 
+                  width={40} 
+                  height={40}
+                />
+                <h1 className="text-primary-blue text-xl font-bold">DoctQR</h1>
+              </div>
+              <nav className="hidden md:block">
+                <ul className="flex gap-6">
+                  <li>
+                    <Link href="/" className="text-primary-blue hover:text-black">
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/how_to" className="text-primary-blue hover:text-black">
+                      How it works
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/Sign_in" className="text-primary-blue hover:text-black">
+                      Sign in
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/Log_in" className="text-primary-blue hover:text-black">
+                      Log in
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
+              <div className="md:hidden">
+                <Button isIconOnly variant="light">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
 
+      {/* Intro Section */}
+      <section id="intro2" className="bg-light-blue py-20">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <div className="mb-6">
+                <h2 className="text-4xl font-bold leading-tight">
+                  Allergies,<br/>
+                  Discapatitations,<br/>
+                  Special conditions.
+                </h2>
+              </div>
+              <p className="text-lg mb-6">All that information and much more in one place.</p>
+              <div className="flex gap-4">
+                <Link href="/Sign_in">
+                  <Button color="primary" size="lg">Sign in</Button>
+                </Link>
+                <Link href="/Log_in">
+                  <Button color="primary" size="lg">Log in</Button>
+                </Link>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <Image 
+                src="/img/hand4.PNG" 
+                alt="Hand holding a card with QR code" 
+                width={400} 
+                height={300}
+                className="rounded-lg shadow-md"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {/* Sección principal: AGENDAR */}
+      {/* Services Section */}
+      <section id="service" className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold">Uses of <u>DOCTQR</u></h2>
+            <p className="text-gray-600 mt-2">
+              Multiples formas para facilitarte la comunicacion de tu ficha medica
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Service Card 1 */}
+            <div className="service-card p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex justify-center mb-4">
+                <Image 
+                  src="/img/doc3.png" 
+                  alt="Medical icon" 
+                  width={80} 
+                  height={80}
+                />
+              </div>
+              <h4 className="text-xl font-semibold text-center mb-2">Medical ocations</h4>
+              <p className="text-gray-600 text-center">
+                ¿Nuevo Doctor? No hay problema. Con DoctQR tu nuevo doctor conseguira todo lo que necesita escaneando el codigo
+              </p>
+            </div>
+            
+            {/* Service Card 2 */}
+            <div className="service-card p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex justify-center mb-4">
+                <Image 
+                  src="/img/emergency.PNG" 
+                  alt="Emergency icon" 
+                  width={80} 
+                  height={80}
+                />
+              </div>
+              <h4 className="text-xl font-semibold text-center mb-2">Emergency</h4>
+              <p className="text-gray-600 text-center">
+                En situaciones dificiles, DoctQR puede facilitar tu informacion medica en el instante
+              </p>
+            </div>
+            
+            {/* Service Card 3 */}
+            <div className="service-card p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex justify-center mb-4">
+                <Image 
+                  src="/img/trip (1).png" 
+                  alt="Trip icon" 
+                  width={80} 
+                  height={80}
+                />
+              </div>
+              <h4 className="text-xl font-semibold text-center mb-2">Trips</h4>
+              <p className="text-gray-600 text-center">
+                Transportar alimentos y medicamentos especiales puede ser complicado. DoctQR le dara la seriedad necesaria a la situacion.
+              </p>
+            </div>
+            
+            {/* Service Card 4 */}
+            <div className="service-card p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex justify-center mb-4">
+                <Image 
+                  src="/img/backpack2.PNG" 
+                  alt="School icon" 
+                  width={80} 
+                  height={80}
+                />
+              </div>
+              <h4 className="text-xl font-semibold text-center mb-2">Schoolar</h4>
+              <p className="text-gray-600 text-center">
+                Algunos niños se les olvida los nombres de los medicamentos que necesitan. Con DoctQR sera mas facil dar a conocer si condicion especial
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    </section>
+      {/* About Section */}
+      <section id="intro" className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <div className="mb-6">
+                <h2 className="text-3xl font-bold text-center md:text-left">About</h2>
+              </div>
+              <p className="text-gray-600">
+                DoctQR is a new way of being able to access medical data through a paper folded in any type of cards. The porpuse of this plattaform is that for those who have health complications, they can make their condition known more easily, providing all kinds of medical parameters with the QR code.
+                <br/><br/>
+                To start with you have to do is create an account, print your QR code and fold the page to fit your cards!
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <Image 
+                src="/img/wallet2.PNG" 
+                alt="Wallet with QR code" 
+                width={400} 
+                height={300}
+                className="rounded-lg shadow-md"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-100 py-12">
+        <div className="container mx-auto px-6">
+          <div className="text-center">
+            <ul className="flex flex-wrap justify-center gap-6 mb-4">
+              <li>
+                <Link href="/" className="text-gray-600 hover:text-black">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/Sign_in" className="text-gray-600 hover:text-black">
+                  Sign in
+                </Link>
+              </li>
+              <li>
+                <Link href="/Log_in" className="text-gray-600 hover:text-black">
+                  Log in
+                </Link>
+              </li>
+              <li>
+                <Link href="/Terms_and_conditions" className="text-gray-600 hover:text-black">
+                  Terms and Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/work" className="text-gray-600 hover:text-black">
+                  How it works
+                </Link>
+              </li>
+            </ul>
+            <p className="text-gray-500 text-sm">Contact: doctqr.contact@gmail.com</p>
+            <p className="text-gray-500 text-sm">Copyright &copy; {new Date().getFullYear()} - <b>DoctQR.</b></p>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }
