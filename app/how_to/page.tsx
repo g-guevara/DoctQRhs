@@ -178,7 +178,7 @@ const HowItWorksPage = () => {
       <section className="text-center bg-blue-50 py-16 px-8 rounded-xl">
         <h2 className="text-3xl font-bold mb-4">Ready to Create Your Medical QR Code?</h2>
         <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-          Take control of your medical information and ensure it's accessible when needed most.
+          Take control of your medical information and ensure it is accessible when needed most.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/Sign_up">
