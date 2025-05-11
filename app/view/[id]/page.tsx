@@ -10,6 +10,7 @@ import {
   Chip
 } from "@nextui-org/react";
 import { title } from "@/components/primitives";
+import { use } from "react"; // Import use from React
 
 interface MedicalInfo {
   _id: string;
@@ -35,6 +36,10 @@ interface MedicalInfo {
 }
 
 export default function MedicalInfoPage({ params }: { params: { id: string } }) {
+  // Use React.use() to unwrap the params Promise
+  const resolvedParams = use(params);
+  const id = resolvedParams.id;
+  
   const [medicalInfo, setMedicalInfo] = useState<MedicalInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +47,7 @@ export default function MedicalInfoPage({ params }: { params: { id: string } }) 
   useEffect(() => {
     const fetchMedicalInfo = async () => {
       try {
-        const response = await fetch(`/api/medical-info/${params.id}`);
+        const response = await fetch(`/api/medical-info/${id}`);
         
         if (!response.ok) {
           throw new Error("Medical information not found");
@@ -59,7 +64,7 @@ export default function MedicalInfoPage({ params }: { params: { id: string } }) 
     };
 
     fetchMedicalInfo();
-  }, [params.id]);
+  }, [id]);
 
   if (loading) {
     return (

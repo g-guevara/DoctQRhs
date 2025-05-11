@@ -1,11 +1,9 @@
 "use client";
 
-// Note: This component requires installing the qrcode package:
-// npm install qrcode @types/qrcode
-
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { Button } from "@nextui-org/react";
 import { PrinterIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import QRCodeReact from "react-qr-code"; // You'll need to install this: npm install react-qr-code
 
 interface QRCodeProps {
   url: string;
@@ -14,29 +12,11 @@ interface QRCodeProps {
 }
 
 const QRCode: React.FC<QRCodeProps> = ({ url, size = 200, title = "Medical Information" }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  
-  useEffect(() => {
-    // Import QRCode library dynamically since it's a client component
-    import('qrcode').then((QRCode) => {
-      if (canvasRef.current) {
-        QRCode.toCanvas(canvasRef.current, url, {
-          width: size,
-          margin: 2,
-          color: {
-            dark: '#000000',
-            light: '#FFFFFF'
-          }
-        });
-      }
-    }).catch(err => {
-      console.error('Error loading QR code library:', err);
-    });
-  }, [url, size]);
+  const qrCodeRef = useRef<HTMLDivElement>(null);
   
   const handlePrint = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const qrCodeElement = qrCodeRef.current;
+    if (!qrCodeElement) return;
     
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
@@ -44,7 +24,13 @@ const QRCode: React.FC<QRCodeProps> = ({ url, size = 200, title = "Medical Infor
       return;
     }
     
-    const dataUrl = canvas.toDataURL('image/png');
+    // Clone the QR code SVG for printing
+    const svgElement = qrCodeElement.querySelector('svg');
+    if (!svgElement) return;
+    
+    const svgClone = svgElement.cloneNode(true) as SVGElement;
+    const svgData = new XMLSerializer().serializeToString(svgClone);
+    const dataUrl = `data:image/svg+xml;base64,${btoa(svgData)}`;
     
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -99,7 +85,7 @@ const QRCode: React.FC<QRCodeProps> = ({ url, size = 200, title = "Medical Infor
               <h2 style="margin: 0;">${title}</h2>
               <p style="margin: 5px 0 0 0;">Scan this QR code for medical information</p>
             </div>
-            <img src="${dataUrl}" alt="QR Code" />
+            <img src="${dataUrl}" alt="QR Code" width="${size}" height="${size}" />
             <div class="footer">
               <p>This QR code provides access to critical medical information.</p>
               <p>Keep this card with you at all times for emergency situations.</p>
@@ -117,22 +103,51 @@ const QRCode: React.FC<QRCodeProps> = ({ url, size = 200, title = "Medical Infor
   };
   
   const handleDownload = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const qrCodeElement = qrCodeRef.current;
+    if (!qrCodeElement) return;
     
-    const dataUrl = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = 'DoctQR-Medical-QR-Code.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const svgElement = qrCodeElement.querySelector('svg');
+    if (!svgElement) return;
+    
+    // Create a canvas element
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Convert SVG to image
+    const svgData = new XMLSerializer().serializeToString(svgElement);
+    const img = new Image();
+    
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      
+      // Convert canvas to PNG
+      const dataUrl = canvas.toDataURL('image/png');
+      
+      // Create download link
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = 'DoctQR-Medical-QR-Code.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+    
+    img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
   };
   
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="bg-white p-4 rounded-xl shadow-sm">
-        <canvas ref={canvasRef} />
+      <div className="bg-white p-4 rounded-xl shadow-sm" ref={qrCodeRef}>
+        <QRCodeReact 
+          value={url} 
+          size={size} 
+          level="H" // High error correction
+          bgColor="#FFFFFF"
+          fgColor="#000000"
+        />
       </div>
       
       <div className="flex flex-wrap gap-2 justify-center">
