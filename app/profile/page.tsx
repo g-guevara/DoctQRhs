@@ -754,53 +754,7 @@ export default function ProfilePage() {
         </CardBody>
       </Card>
       
-      {/* Action Buttons */}
-      <Card className="w-full print:hidden">
-        <CardBody className="p-6">
-          <div className="flex flex-col md:flex-row gap-6 justify-between items-center">
-            {/* Save message */}
-            {saveMessage && (
-              <div className={`p-3 rounded-md ${saveMessage.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} text-medium`}>
-                {saveMessage.text}
-              </div>
-            )}
-            
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
-              <Button 
-                color="primary" 
-                variant="bordered"
-                startContent={<PrinterIcon className="w-5 h-5" />}
-                onPress={handlePrint}
-                size="lg"
-                className="px-8"
-              >
-                Print
-              </Button>
-              
-              <Button 
-                color="danger" 
-                variant="flat" 
-                startContent={<ArrowRightOnRectangleIcon className="w-5 h-5" />}
-                onPress={handleSignOut}
-                size="lg"
-                className="px-8"
-              >
-                Sign Out
-              </Button>
-              
-              <Button 
-                color="primary" 
-                isLoading={isSaving}
-                onPress={handleSaveChanges}
-                size="lg"
-                className="px-8"
-              >
-                Save Changes
-              </Button>
-            </div>
-          </div>
-        </CardBody>
-      </Card>
+
     </div>
   );
 }
