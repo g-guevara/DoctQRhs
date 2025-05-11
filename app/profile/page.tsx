@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { 
   Button, 
   Card, 
@@ -15,13 +15,34 @@ import {
   DropdownMenu,
   DropdownItem,
   Select,
-  SelectItem
+  SelectItem,
+  Tabs,
+  Tab
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { title } from "@/components/primitives";
-import { PlusIcon, PrinterIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
+import { 
+  PlusIcon, 
+  PrinterIcon, 
+  ArrowRightOnRectangleIcon,
+  QrCodeIcon, 
+  LinkIcon, 
+  DocumentDuplicateIcon 
+} from "@heroicons/react/24/outline";
+import dynamic from "next/dynamic";
+
+// Import QRCode with SSR disabled
+const QRCode = dynamic(() => import("@/components/QRCode"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[200px] w-[200px] flex items-center justify-center">
+      <div className="animate-pulse">Loading QR code...</div>
+    </div>
+  )
+});
 
 interface User {
+  _id?: string; // Added _id property for MongoDB documents
   firstName: string;
   lastName: string;
   email: string;
@@ -57,6 +78,8 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{text: string, type: 'success' | 'error'} | null>(null);
+  const [sharedLink, setSharedLink] = useState<string | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -161,6 +184,27 @@ export default function ProfilePage() {
     };
   }, [router]);
 
+  // Effect to fetch existing medical info link
+  useEffect(() => {
+    if (user?._id) {
+      const fetchMedicalInfo = async () => {
+        try {
+          const response = await fetch('/api/medical-info');
+          if (response.ok) {
+            const data = await response.json();
+            if (data.exists) {
+              setSharedLink(data.publicUrl);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching medical info:', error);
+        }
+      };
+      
+      fetchMedicalInfo();
+    }
+  }, [user]);
+
   const handleInputChange = (field: string, value: string | boolean | null) => {
     setFormData(prev => ({
       ...prev,
@@ -243,6 +287,17 @@ export default function ProfilePage() {
     }));
   };
 
+  const handleCopyLink = () => {
+    if (sharedLink) {
+      navigator.clipboard.writeText(sharedLink);
+      setLinkCopied(true);
+      
+      setTimeout(() => {
+        setLinkCopied(false);
+      }, 2000);
+    }
+  };
+
   const handleSaveChanges = async () => {
     if (!user) return;
     
@@ -253,27 +308,46 @@ export default function ProfilePage() {
       const numericHeight = formData.height ? parseFloat(formData.height) : undefined;
       const numericWeight = formData.weight ? parseFloat(formData.weight) : undefined;
       
-      // Create updated user object with medical info
-      const updatedUser = {
-        ...user,
-        medicalInfo: {
-          birthDate: formData.birthDate,
-          language: formData.language,
-          isOrganDonor: formData.isOrganDonor,
-          isPregnant: formData.isPregnant,
-          medications: formData.medications,
-          allergies: formData.allergies,
-          emergencyContacts: formData.emergencyContacts,
-          conditions: formData.conditions,
-          height: numericHeight,
-          weight: numericWeight,
-          bloodType: formData.bloodType,
-          additionalNotes: formData.additionalNotes
-        }
+      // Create medical info object
+      const medicalInfo = {
+        birthDate: formData.birthDate,
+        language: formData.language,
+        isOrganDonor: formData.isOrganDonor,
+        isPregnant: formData.isPregnant,
+        medications: formData.medications,
+        allergies: formData.allergies,
+        emergencyContacts: formData.emergencyContacts,
+        conditions: formData.conditions,
+        height: numericHeight,
+        weight: numericWeight,
+        bloodType: formData.bloodType,
+        additionalNotes: formData.additionalNotes
       };
       
-      // In a real application, you would send this data to your API
-      // For now, we'll just update localStorage/sessionStorage
+      // Save to the database
+      const response = await fetch('/api/medical-info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(medicalInfo)
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save medical information');
+      }
+      
+      const data = await response.json();
+      
+      // Update local state with the data from the server
+      setSharedLink(data.publicUrl);
+      
+      // Also update localStorage/sessionStorage for backwards compatibility
+      const updatedUser = {
+        ...user,
+        medicalInfo: medicalInfo
+      };
       
       if (localStorage.getItem("user")) {
         localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -293,7 +367,10 @@ export default function ProfilePage() {
       
     } catch (error) {
       console.error("Error saving data:", error);
-      setSaveMessage({ text: "Failed to save changes. Please try again.", type: "error" });
+      setSaveMessage({ 
+        text: error instanceof Error ? error.message : "Failed to save changes. Please try again.", 
+        type: "error" 
+      });
     } finally {
       setIsSaving(false);
     }
@@ -316,6 +393,112 @@ export default function ProfilePage() {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  // Shared Link Section Component
+  const SharedLinkSection = () => {
+    if (!sharedLink) return null;
+    
+    return (
+      <Card className="w-full mb-8">
+        <CardHeader className="flex flex-col items-start px-6 py-4 bg-green-50">
+          <div className="flex items-center gap-2">
+            <QrCodeIcon className="w-5 h-5 text-green-600" />
+            <h2 className="text-xl font-bold text-green-600">Your Medical Information Link</h2>
+          </div>
+          <p className="text-default-500 text-sm">Share this link to provide access to your medical information</p>
+        </CardHeader>
+        <Divider />
+        <CardBody className="px-6 py-6">
+          <Tabs 
+            aria-label="Medical information sharing options" 
+            color="primary"
+            variant="underlined"
+            classNames={{
+              tabList: "gap-6",
+            }}
+          >
+            <Tab 
+              key="link" 
+              title={
+                <div className="flex items-center gap-2">
+                  <LinkIcon className="w-4 h-4" />
+                  <span>Share Link</span>
+                </div>
+              }
+            >
+              <div className="py-4">
+                <p className="text-sm text-gray-600 mb-4">
+                  This link provides access to your medical information. You can share it with healthcare providers 
+                  for quick access to your critical medical details.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Input
+                    value={sharedLink}
+                    readOnly
+                    size="lg"
+                    className="flex-1"
+                    startContent={<LinkIcon className="w-5 h-5 text-default-400" />}
+                  />
+                  <Button
+                    color="primary"
+                    size="lg"
+                    startContent={<DocumentDuplicateIcon className="w-5 h-5" />}
+                    onClick={handleCopyLink}
+                  >
+                    {linkCopied ? "Copied!" : "Copy Link"}
+                  </Button>
+                </div>
+                
+                <div className="mt-4">
+                  <Button
+                    color="secondary"
+                    variant="ghost"
+                    size="md"
+                    as="a"
+                    href={sharedLink}
+                    target="_blank"
+                    startContent={<QrCodeIcon className="w-5 h-5" />}
+                  >
+                    View Your Public Medical Profile
+                  </Button>
+                </div>
+              </div>
+            </Tab>
+            
+            <Tab 
+              key="qr-code" 
+              title={
+                <div className="flex items-center gap-2">
+                  <QrCodeIcon className="w-4 h-4" />
+                  <span>QR Code</span>
+                </div>
+              }
+            >
+              <div className="py-6 flex flex-col gap-4">
+                <p className="text-sm text-gray-600">
+                  Print this QR code to carry with you in your wallet or on your medical ID. Emergency personnel 
+                  can scan this code to access your critical medical information instantly.
+                </p>
+                
+                <div className="flex justify-center mt-2">
+                  <QRCode 
+                    url={sharedLink} 
+                    size={200} 
+                    title={`${user?.firstName} ${user?.lastName} - Medical Information`} 
+                  />
+                </div>
+                
+                <p className="text-xs text-center text-gray-500 mt-2">
+                  Click the buttons above to print or download your medical QR code
+                </p>
+              </div>
+            </Tab>
+          </Tabs>
+        </CardBody>
+      </Card>
+    );
   };
 
   if (loading) {
@@ -753,6 +936,9 @@ export default function ProfilePage() {
           />
         </CardBody>
       </Card>
+      
+      {/* Shared Link Section */}
+      <SharedLinkSection />
       
       {/* Action Buttons */}
       <Card className="w-full print:hidden">
