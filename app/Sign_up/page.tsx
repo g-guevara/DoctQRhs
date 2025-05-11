@@ -2,8 +2,18 @@
 
 import React from "react";
 import Image from "next/image";
-import SignupForm from "@/components/SignupForm";
+import dynamic from "next/dynamic";
 import { title } from "@/components/primitives";
+
+// Import SignupForm with SSR disabled
+const SignupForm = dynamic(() => import("@/components/SignupForm"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[500px] flex items-center justify-center">
+      <div className="animate-pulse">Loading form...</div>
+    </div>
+  )
+});
 
 export default function SignUpPage() {
   return (
