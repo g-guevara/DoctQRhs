@@ -17,6 +17,12 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Hide navbar when profile page loads
+    const navbar = document.querySelector("nav");
+    if (navbar) {
+      navbar.style.display = "none";
+    }
+
     // Check if we're in a browser environment
     if (typeof window !== "undefined") {
       // Try to get user from localStorage or sessionStorage
@@ -35,9 +41,22 @@ export default function ProfilePage() {
       
       setLoading(false);
     }
+
+    // Clean up function to show navbar again when navigating away
+    return () => {
+      if (navbar) {
+        navbar.style.display = "";
+      }
+    };
   }, [router]);
 
   const handleSignOut = () => {
+    // Show navbar again when signing out
+    const navbar = document.querySelector("nav");
+    if (navbar) {
+      navbar.style.display = "";
+    }
+    
     // Clear user data from storage
     localStorage.removeItem("user");
     sessionStorage.removeItem("user");
