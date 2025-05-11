@@ -1,22 +1,17 @@
-import mongoose from 'mongoose';
+// File: app/api/auth/route.js
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-
-// Database connection
-const MONGODB_URI = "mongodb+srv://0okm1qaz2wdc:7I4f1UzE1MtPMA3x@cluster0.zjwennm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-if (!global.mongoose) {
-  global.mongoose = mongoose.connect(MONGODB_URI);
-}
-
-// Get User model
-const User = mongoose.models.User || mongoose.model('User');
+import dbConnect from '../../../models/db';
+import User from '../../../models/User';
 
 // JWT Secret - In production, this should be stored in environment variables
 const JWT_SECRET = process.env.JWT_SECRET || "doctqr-jwt-secret-key";
 
 export async function POST(req) {
   try {
+    // Connect to the database
+    await dbConnect();
+    
     const { email, password } = await req.json();
     
     // Validate input

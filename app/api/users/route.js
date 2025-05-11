@@ -1,45 +1,14 @@
-import mongoose from 'mongoose';
+// File: app/api/users/route.js
 import { hash } from 'bcryptjs';
-
-// Database connection
-const MONGODB_URI = "mongodb+srv://0okm1qaz2wdc:7I4f1UzE1MtPMA3x@cluster0.zjwennm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-if (!global.mongoose) {
-  global.mongoose = mongoose.connect(MONGODB_URI);
-}
-
-// User schema definition
-const UserSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { 
-    type: String, 
-    required: true, 
-    unique: true,
-    trim: true,
-    lowercase: true
-  },
-  password: { type: String, required: true },
-  medicalInfo: {
-    allergies: [String],
-    conditions: [String],
-    medications: [String],
-    emergencyContacts: [{
-      name: String,
-      phone: String,
-      relationship: String
-    }],
-    bloodType: String
-  },
-  createdAt: { type: Date, default: Date.now }
-});
-
-// Create the User model if it doesn't exist
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
+import dbConnect from '../../../models/db';
+import User from '../../../models/User';
 
 // POST handler for user registration
 export async function POST(req) {
   try {
+    // Connect to the database
+    await dbConnect();
+    
     // Parse request body
     const body = await req.json();
     
@@ -97,6 +66,9 @@ export async function POST(req) {
 // GET handler to check if email exists (for form validation)
 export async function GET(req) {
   try {
+    // Connect to the database
+    await dbConnect();
+    
     const { searchParams } = new URL(req.url);
     const email = searchParams.get('email');
     
